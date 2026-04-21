@@ -1,4 +1,4 @@
-/*public static final Long DELETE_CATEGORY_ID = 2L;
+public static final Long DELETE_CATEGORY_ID = 2L;
 
 @Test
 public void deleteWithExistsIdShouldDeleteCategory() {
@@ -17,4 +17,3 @@ public void deleteWithNotExistsIdShouldInternalError() {
 
     assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
 }
-*/

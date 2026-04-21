@@ -43,7 +43,7 @@ public class GameServiceImpl implements GameService {
         // Desde la versión 3.5.0 de Spring Boot, la nueva manera es
         Specification<Game> spec = titleSpec.and(categorySpec);
 
-        return (List<Game>) this.gameRepository.findAll();
+        return this.gameRepository.findAll(spec);
     }
 
     /**
