@@ -40,18 +40,21 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public void save(Long id, ClientDto dto) {
+        if (!this.clientRepository.existsByName(dto.getName())) {
+            Client client;
 
-        Client client;
+            if (id == null) {
+                client = new Client();
+            } else {
+                client = this.get(id);
+            }
 
-        if (id == null) {
-            client = new Client();
+            client.setName(dto.getName());
+
+            this.clientRepository.save(client);
         } else {
-            client = this.get(id);
+            throw new RuntimeException("Ese nombre de Clientre ya existe");
         }
-
-        client.setName(dto.getName());
-
-        this.clientRepository.save(client);
     }
 
     /**

@@ -39,4 +39,5 @@ public interface ClientService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
+    
 }

@@ -105,4 +105,21 @@ public class ClientTest {
 
         verify(clientRepository).deleteById(EXISTS_CLIENT_ID);
     }
+
+    @Test
+    public void saveClientWithExistingNameShouldThrowException() {
+
+        ClientDto clientDto = new ClientDto();
+        clientDto.setName(CLIENT_NAME);
+
+        when(clientRepository.existsByName(CLIENT_NAME)).thenReturn(true);
+
+        RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+            clientService.save(null, clientDto);
+        });
+
+        assertEquals("Client name already exists", exception.getMessage());
+
+        verify(clientRepository, never()).save(any());
+    }
 }
