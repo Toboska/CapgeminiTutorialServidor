@@ -40,11 +40,11 @@ public class ClientIT {
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
 
         assertNotNull(response);
-        assertEquals(3, response.getBody().size());
+        assertEquals(6, response.getBody().size()); // ← antes 3
     }
 
-    public static final Long NEW_CLIENT_ID = 4L;
-    public static final String NEW_CLIENT_NAME = "CLIENT4";
+    public static final Long NEW_CLIENT_ID = 7L; // ← antes 4
+    public static final String NEW_CLIENT_NAME = "CLIENT7";
 
     @Test
     public void saveWithoutIdShouldCreateNewClient() {
@@ -57,7 +57,7 @@ public class ClientIT {
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
 
         assertNotNull(response);
-        assertEquals(4, response.getBody().size());
+        assertEquals(7, response.getBody().size()); // ← antes 4
 
         ClientDto clientSearch = response.getBody().stream().filter(item -> item.getId().equals(NEW_CLIENT_ID)).findFirst().orElse(null);
 
@@ -78,7 +78,7 @@ public class ClientIT {
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
 
         assertNotNull(response);
-        assertEquals(3, response.getBody().size());
+        assertEquals(6, response.getBody().size()); // ← sigue siendo 6
 
         ClientDto clientSearch = response.getBody().stream().filter(item -> item.getId().equals(MODIFY_CLIENT_ID)).findFirst().orElse(null);
 
@@ -107,7 +107,7 @@ public class ClientIT {
         ResponseEntity<List<ClientDto>> response = restTemplate.exchange(LOCALHOST + port + SERVICE_PATH, HttpMethod.GET, null, responseType);
 
         assertNotNull(response);
-        assertEquals(2, response.getBody().size());
+        assertEquals(5, response.getBody().size()); // ← antes 2
     }
 
     @Test
