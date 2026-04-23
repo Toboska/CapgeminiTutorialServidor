@@ -9,5 +9,12 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface ClientRepository extends CrudRepository<Client, Long> {
     //Definimos las consultas a los datos
+
+    /**
+     * Método para saber si un nombre existe en {@link Client}
+     *
+     * @param name nombre del cliente a buscar
+     * @return {@code true} si el nombre existe; {@code false} si no
+     */
     boolean existsByName(String name);
 }
