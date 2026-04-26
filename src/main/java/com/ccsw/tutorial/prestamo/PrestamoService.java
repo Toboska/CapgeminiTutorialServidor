@@ -1,7 +1,7 @@
 package com.ccsw.tutorial.prestamo;
 
-import com.ccsw.tutorial.author.model.Author;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
+import com.ccsw.tutorial.prestamo.model.PrestamoDto;
 import com.ccsw.tutorial.prestamo.model.PrestamoSearchDto;
 import org.springframework.data.domain.Page;
 
@@ -27,4 +27,20 @@ public interface PrestamoService {
      * @return {@link List} de {@link Prestamo}
      */
     List<Prestamo> findAll();
+
+    /**
+     * Recupera un {@link Prestamo} a través de su ID
+     *
+     * @param id PK de la entidad
+     * @return {@link Prestamo}
+     */
+    Prestamo get(Long id);
+
+    /**
+     * Método para crear o actualizar un {@link Prestamo}
+     *
+     * @param id PK de la entidad
+     * @param dto datos de la entidad
+     */
+    void save(Long id, PrestamoDto dto);
 }

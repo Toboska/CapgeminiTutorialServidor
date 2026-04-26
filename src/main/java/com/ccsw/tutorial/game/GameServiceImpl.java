@@ -68,4 +68,13 @@ public class GameServiceImpl implements GameService {
         this.gameRepository.save(game);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Game get(Long id) {
+
+        return this.gameRepository.findById(id).orElse(null);
+    }
+
 }

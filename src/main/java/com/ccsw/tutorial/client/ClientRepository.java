@@ -17,4 +17,6 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
      * @return {@code true} si el nombre existe; {@code false} si no
      */
     boolean existsByName(String name);
+
+
 }

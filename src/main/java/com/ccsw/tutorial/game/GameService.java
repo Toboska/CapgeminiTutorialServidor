@@ -2,6 +2,7 @@ package com.ccsw.tutorial.game;
 
 import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.game.model.GameDto;
+import com.ccsw.tutorial.prestamo.model.Prestamo;
 
 import java.util.List;
 
@@ -27,5 +28,13 @@ public interface GameService {
      * @param dto datos de la entidad
      */
     void save(Long id, GameDto dto);
+
+    /**
+     * Recupera un {@link Prestamo} a través de su ID
+     *
+     * @param id PK de la entidad
+     * @return {@link Prestamo}
+     */
+    Game get(Long id);
 
 }
