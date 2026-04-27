@@ -1,5 +1,6 @@
 package com.ccsw.tutorial.prestamo;
 
+import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import com.ccsw.tutorial.prestamo.model.PrestamoDto;
 import com.ccsw.tutorial.prestamo.model.PrestamoSearchDto;
@@ -70,6 +71,18 @@ public class PrestamoController {
     public void save(@PathVariable(name = "id", required = false) Long id, @RequestBody PrestamoDto dto) {
 
         this.prestamoService.save(id, dto);
+    }
+
+    /**
+     * Método para borrar una {@link Category}
+     *
+     * @param id PK de la entidad
+     */
+    @Operation(summary = "Delete", description = "Method that deletes a Prestamo")
+    @RequestMapping(path = "/{id}", method = RequestMethod.DELETE)
+    public void delete(@PathVariable("id") Long id) throws Exception {
+
+        this.prestamoService.delete(id);
     }
 
 }
