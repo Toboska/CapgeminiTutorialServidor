@@ -106,21 +106,31 @@ public class PrestamoServiceImpl implements PrestamoService {
     /**
      * {@inheritDoc}
      */
-    //Cambiar a Specification
     @Override
     public boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
-        return !this.prestamoRepository.isGameOccupied(gameId, fechaPrestamo, fechaDevolucion, prestamoId);
+        Specification<Prestamo> spec = Specification.allOf(
+                PrestamoSpecification.mismoJuego(gameId),
+                PrestamoSpecification.seSolapa(fechaPrestamo, fechaDevolucion),
+                PrestamoSpecification.excluirId(prestamoId)
+        );
+
+        return !prestamoRepository.exists(spec);
     }
 
     /**
      * {@inheritDoc}
      */
-    //Cambiar a Specification
     @Override
     public boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
-        return !this.prestamoRepository.isClientOccupied(clientId, fechaPrestamo, fechaDevolucion, prestamoId);
+        Specification<Prestamo> spec = Specification.allOf(
+                PrestamoSpecification.mismoCliente(clientId),
+                PrestamoSpecification.seSolapa(fechaPrestamo, fechaDevolucion),
+                PrestamoSpecification.excluirId(prestamoId)
+        );
+
+        return !prestamoRepository.exists(spec);
     }
 
     /**
