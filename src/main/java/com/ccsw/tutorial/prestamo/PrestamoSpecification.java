@@ -64,7 +64,7 @@ public class PrestamoSpecification implements Specification<Prestamo> {
 
     public static Specification<Prestamo> seSolapa(LocalDate inicio, LocalDate fin) {
         return (root, query, cb) -> {
-            // Lógica: (FechaInicioExistente <= fin) AND (FechaFinExistente >= inicio)
+
             return cb.and(
                     cb.lessThanOrEqualTo(root.get("fechaPrestamo"), fin),
                     cb.greaterThanOrEqualTo(root.get("fechaDevolucion"), inicio)
