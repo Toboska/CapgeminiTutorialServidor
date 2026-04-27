@@ -68,7 +68,7 @@ public interface PrestamoService {
      * @param fechaDevolucion de la entidad
      * @return {boolean true si está prestado, false en caso contrario.
      */
-    boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion);
+    boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId);
 
     /**
      *
@@ -79,7 +79,7 @@ public interface PrestamoService {
      * @param fechaDevolucion de la entidad
      * @return {boolean si el cliente tiene préstamo entre las fechas, false en caso contrario.
      */
-    boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion);
+    boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId);
 
     /**
      * Método para controlar que las fechas no son nulas y comprobar todos los requisitos {@link Prestamo}

@@ -41,8 +41,8 @@ public class PrestamoController {
     @Operation(summary = "Find Page", description = "Method that return a page of Prestamos")
     @GetMapping
     public Page<PrestamoDto> findPage(Pageable pageable, @RequestParam(required = false) Long gameId, @RequestParam(required = false) Long clientId,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
-
+            @RequestParam(required = false, value = "date") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate date) {
+        System.out.println(date);
         Page<Prestamo> page = prestamoService.findPage(pageable, gameId, clientId, date);
 
         return page.map(e -> mapper.map(e, PrestamoDto.class));

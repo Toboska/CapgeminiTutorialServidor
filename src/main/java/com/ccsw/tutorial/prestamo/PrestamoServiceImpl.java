@@ -107,18 +107,18 @@ public class PrestamoServiceImpl implements PrestamoService {
      * {@inheritDoc}
      */
     @Override
-    public boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion) {
+    public boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
-        return !this.prestamoRepository.isGameOccupied(gameId, fechaPrestamo, fechaDevolucion);
+        return !this.prestamoRepository.isGameOccupied(gameId, fechaPrestamo, fechaDevolucion, prestamoId);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion) {
+    public boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
-        return !this.prestamoRepository.isClientOccupied(clientId, fechaPrestamo, fechaDevolucion);
+        return !this.prestamoRepository.isClientOccupied(clientId, fechaPrestamo, fechaDevolucion, prestamoId);
     }
 
     /**
@@ -130,8 +130,8 @@ public class PrestamoServiceImpl implements PrestamoService {
             return false;
         }
 
-        return checkValidDateRange(dto.getFechaPrestamo(), dto.getFechaDevolucion()) && isGameAvailable(dto.getGame().getId(), dto.getFechaPrestamo(), dto.getFechaDevolucion()) && isClientInCurrentLoan(dto.getClient().getId(),
-                dto.getFechaPrestamo(), dto.getFechaDevolucion());
+        return checkValidDateRange(dto.getFechaPrestamo(), dto.getFechaDevolucion()) && isGameAvailable(dto.getGame().getId(), dto.getFechaPrestamo(), dto.getFechaDevolucion(), dto.getId()) && isClientInCurrentLoan(dto.getClient().getId(),
+                dto.getFechaPrestamo(), dto.getFechaDevolucion(), dto.getId());
     }
 
     /**
