@@ -5,7 +5,7 @@ import com.ccsw.tutorial.prestamo.model.Prestamo;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class PrestamoSpecification implements Specification<Prestamo> {
 
@@ -17,37 +17,24 @@ public class PrestamoSpecification implements Specification<Prestamo> {
         this.criteria = criteria;
     }
 
+    public static Specification<Prestamo> dateBetween(LocalDate date) {
+        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> builder.and(builder.lessThanOrEqualTo(root.get("fechaPrestamo"), date), builder.greaterThanOrEqualTo(root.get("fechaDevolucion"), date));
+    }
+    
     @Override
     public Predicate toPredicate(Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
         if (criteria.getOperation().equalsIgnoreCase(":") && criteria.getValue() != null) {
+
             Path<?> path = getPath(root);
 
-            // Caso 1: Atributos de tipo String (usamos LIKE para búsqueda parcial)
+            // Strings → LIKE
             if (path.getJavaType() == String.class) {
                 return builder.like(path.as(String.class), "%" + criteria.getValue() + "%");
             }
 
-            // Caso 2: Atributos de tipo Date
-            else if (path.getJavaType() == Date.class) {
-                // Si la operación es ":" en fechas, solemos buscar registros donde la fecha buscada
-                //                // esté dentro del rango del préstamo (fechaPrestamo <= buscada <= fechaDevolucion)
-                // Pero si solo filtras por un campo exacto, usamos equal:
-                return builder.equal(path, criteria.getValue());
-            }
-
-            // Caso 3: Resto de tipos (Long, Integer, Objetos/Entity)
-            else {
-                return builder.equal(path, criteria.getValue());
-            }
-        }
-
-        // Caso para operaciones de comparación de fechas (opcional pero recomendado)
-        if (criteria.getOperation().equalsIgnoreCase("<=")) {
-            return builder.lessThanOrEqualTo(root.get(criteria.getKey()), (Date) criteria.getValue());
-        }
-        if (criteria.getOperation().equalsIgnoreCase(">=")) {
-            return builder.greaterThanOrEqualTo(root.get(criteria.getKey()), (Date) criteria.getValue());
+            // Resto de tipos → igualdad
+            return builder.equal(path, criteria.getValue());
         }
 
         return null;

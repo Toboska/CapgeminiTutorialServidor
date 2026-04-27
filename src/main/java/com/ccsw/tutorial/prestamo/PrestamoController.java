@@ -3,17 +3,16 @@ package com.ccsw.tutorial.prestamo;
 import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import com.ccsw.tutorial.prestamo.model.PrestamoDto;
-import com.ccsw.tutorial.prestamo.model.PrestamoSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDate;
 
 /**
  * @prestamo ccsw
@@ -34,30 +33,19 @@ public class PrestamoController {
     /**
      * Método para recuperar un listado paginado de {@link Prestamo}
      *
-     * @param dto dto de búsqueda
-     * @return {@link Page} de {@link PrestamoDto}
+     * @param pageable Configuración de paginación
+     * @param gameId   PK del juego
+     * @param clientId PK del cliente
+     * @param date     Fecha a filtrar
      */
     @Operation(summary = "Find Page", description = "Method that return a page of Prestamos")
-    @RequestMapping(path = "", method = RequestMethod.POST)
-    public Page<PrestamoDto> findPage(@RequestBody PrestamoSearchDto dto) {
+    @GetMapping
+    public Page<PrestamoDto> findPage(Pageable pageable, @RequestParam(required = false) Long gameId, @RequestParam(required = false) Long clientId,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
 
-        Page<Prestamo> page = this.prestamoService.findPage(dto);
+        Page<Prestamo> page = prestamoService.findPage(pageable, gameId, clientId, date);
 
-        return new PageImpl<>(page.getContent().stream().map(e -> mapper.map(e, PrestamoDto.class)).collect(Collectors.toList()), page.getPageable(), page.getTotalElements());
-    }
-
-    /**
-     * Recupera un listado de préstamos {@link Prestamo}
-     *
-     * @return {@link List} de {@link PrestamoDto}
-     */
-    @Operation(summary = "Find", description = "Method that return a list of Prestamos")
-    @RequestMapping(path = "", method = RequestMethod.GET)
-    public List<PrestamoDto> findAll() {
-
-        List<Prestamo> prestamos = this.prestamoService.findAll();
-
-        return prestamos.stream().map(e -> mapper.map(e, PrestamoDto.class)).collect(Collectors.toList());
+        return page.map(e -> mapper.map(e, PrestamoDto.class));
     }
 
     /**

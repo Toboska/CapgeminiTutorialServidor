@@ -1,9 +1,7 @@
 package com.ccsw.tutorial.prestamo;
 
-import com.ccsw.tutorial.game.model.Game;
 import com.ccsw.tutorial.prestamo.model.Prestamo;
 import com.ccsw.tutorial.prestamo.model.PrestamoDto;
-import com.ccsw.tutorial.prestamo.model.PrestamoSearchDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -17,12 +15,15 @@ import java.util.List;
 public interface PrestamoService {
 
     /**
-     * Método para recuperar un listado paginado de {@link Prestamo}
+     * Recupera una página de préstamos filtrando opcionalmente por juego, cliente y/o fecha
      *
-     * @param dto dto de búsqueda
+     * @param pageable Configuración de paginación
+     * @param gameId   PK del juego
+     * @param clientId PK del cliente
+     * @param date     Fecha a filtrar
      * @return {@link Page} de {@link Prestamo}
      */
-    Page<Prestamo> findPage(PrestamoSearchDto dto);
+    Page<Prestamo> findPage(Pageable pageable, Long gameId, Long clientId, LocalDate date);
 
     /**
      * Recupera un listado de autores {@link Prestamo}
@@ -95,14 +96,4 @@ public interface PrestamoService {
      */
     void delete(Long id) throws Exception;
 
-    /**
-     * Recupera una página de préstamos filtrando opcionalmente por juego, cliente y/o fecha
-     *
-     * @param idGame   PK del juego
-     * @param idClient PK del cliente
-     * @param date     Fecha a filtrar
-     * @param pageable Configuración de paginación
-     * @return {@link Page} de {@link Prestamo}
-     */
-    Page<Prestamo> find(Long idGame, Long idClient, LocalDate date, Pageable pageable);
 }
