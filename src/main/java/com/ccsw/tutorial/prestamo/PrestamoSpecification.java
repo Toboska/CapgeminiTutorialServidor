@@ -51,4 +51,48 @@ public class PrestamoSpecification implements Specification<Prestamo> {
 
         return expression;
     }
+
+    public class PrestamoSpecifications {
+
+        public static Specification<Prestamo> mismoJuego(Long juegoId) {
+            return (root, query, cb) ->
+                    cb.equal(root.get("juego").get("id"), juegoId);
+        }
+
+        public static Specification<Prestamo> seSolapa(
+                LocalDate inicio,
+                LocalDate fin
+        ) {
+            return (root, query, cb) ->
+                    cb.and(
+                            cb.lessThanOrEqualTo(root.get("fechaInicio"), fin),
+                            cb.greaterThanOrEqualTo(root.get("fechaFin"), inicio)
+                    );
+        }
+    }
+
+    Specification<Prestamo> spec = Specification
+            .where(mismoJuego(juegoId))
+            .and(seSolapa(nuevaInicio, nuevaFin));
+
+    boolean existeConflicto = prestamoRepository.count(spec) > 0;
+
+if (existeConflicto) {
+        throw new BusinessException("El juego ya está prestado en ese rango de fechas");
+    }
+
+    Specification<Prestamo> spec =
+            mismoJuego(juegoId)
+                    .and(seSolapa(inicio, fin));
+
+    public static Specification<Prestamo> excluirId(Long id) {
+        return (root, query, cb) ->
+                cb.notEqual(root.get("id"), id);
+    }
+
+    Specification<Prestamo> spec = Specification
+            .where(mismoJuego(juegoId))
+            .and(seSolapa(nuevaInicio, nuevaFin))
+            .and(excluirId(prestamoIdActual));
+
 }

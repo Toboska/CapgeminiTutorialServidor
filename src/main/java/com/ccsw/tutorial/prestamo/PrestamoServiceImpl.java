@@ -106,6 +106,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     /**
      * {@inheritDoc}
      */
+    //Cambiar a Specification
     @Override
     public boolean isGameAvailable(Long gameId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
@@ -115,6 +116,7 @@ public class PrestamoServiceImpl implements PrestamoService {
     /**
      * {@inheritDoc}
      */
+    //Cambiar a Specification
     @Override
     public boolean isClientInCurrentLoan(Long clientId, LocalDate fechaPrestamo, LocalDate fechaDevolucion, Long prestamoId) {
 
