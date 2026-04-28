@@ -20,7 +20,7 @@ public class PrestamoSpecification implements Specification<Prestamo> {
     public static Specification<Prestamo> dateBetween(LocalDate date) {
         return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> builder.and(builder.lessThanOrEqualTo(root.get("fechaPrestamo"), date), builder.greaterThanOrEqualTo(root.get("fechaDevolucion"), date));
     }
-    
+
     @Override
     public Predicate toPredicate(Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
@@ -28,12 +28,10 @@ public class PrestamoSpecification implements Specification<Prestamo> {
 
             Path<?> path = getPath(root);
 
-            // Strings → LIKE
             if (path.getJavaType() == String.class) {
                 return builder.like(path.as(String.class), "%" + criteria.getValue() + "%");
             }
 
-            // Resto de tipos → igualdad
             return builder.equal(path, criteria.getValue());
         }
 
@@ -53,28 +51,22 @@ public class PrestamoSpecification implements Specification<Prestamo> {
     }
 
     public static Specification<Prestamo> mismoJuego(Long juegoId) {
-        return (root, query, cb) ->
-                cb.equal(root.get("game").get("id"), juegoId);
+        return (root, query, cb) -> cb.equal(root.get("game").get("id"), juegoId);
     }
 
     public static Specification<Prestamo> excluirId(Long id) {
-        return (root, query, cb) ->
-                id == null ? null : cb.notEqual(root.get("id"), id);
+        return (root, query, cb) -> id == null ? null : cb.notEqual(root.get("id"), id);
     }
 
     public static Specification<Prestamo> seSolapa(LocalDate inicio, LocalDate fin) {
         return (root, query, cb) -> {
 
-            return cb.and(
-                    cb.lessThanOrEqualTo(root.get("fechaPrestamo"), fin),
-                    cb.greaterThanOrEqualTo(root.get("fechaDevolucion"), inicio)
-            );
+            return cb.and(cb.lessThanOrEqualTo(root.get("fechaPrestamo"), fin), cb.greaterThanOrEqualTo(root.get("fechaDevolucion"), inicio));
         };
     }
 
     public static Specification<Prestamo> mismoCliente(Long clientId) {
-        return (root, query, cb) ->
-                cb.equal(root.get("client").get("id"), clientId);
+        return (root, query, cb) -> cb.equal(root.get("client").get("id"), clientId);
     }
 
 }
