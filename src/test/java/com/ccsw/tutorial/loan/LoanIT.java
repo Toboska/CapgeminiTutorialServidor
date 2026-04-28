@@ -1,6 +1,6 @@
-package com.ccsw.tutorial.prestamo;
+package com.ccsw.tutorial.loan;
 
-import com.ccsw.tutorial.prestamo.model.PrestamoDto;
+import com.ccsw.tutorial.loan.model.LoanDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PrestamoIT {
+class LoanIT {
 
     @LocalServerPort
     private int port;
@@ -22,15 +22,15 @@ class PrestamoIT {
     private TestRestTemplate restTemplate;
 
     private String getUrl() {
-        return "http://localhost:" + port + "/prestamo";
+        return "http://localhost:" + port + "/loan";
     }
 
     @Test
-    void deberiaCrearPrestamoCorrectamente() {
-        PrestamoDto dto = new PrestamoDto();
+    void shouldCreateLoanCorrectly() {
+        LoanDto dto = new LoanDto();
 
-        dto.setFechaPrestamo(LocalDate.now());
-        dto.setFechaDevolucion(LocalDate.now().plusDays(7));
+        dto.setLoanStartDate(LocalDate.now());
+        dto.setLoanEndDate(LocalDate.now().plusDays(7));
 
         // IMPORTANTE: IDs deben existir en BD
         dto.setGame(new com.ccsw.tutorial.game.model.GameDto());
@@ -42,24 +42,19 @@ class PrestamoIT {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<PrestamoDto> request = new HttpEntity<>(dto, headers);
+        HttpEntity<LoanDto> request = new HttpEntity<>(dto, headers);
 
-        ResponseEntity<Void> response = restTemplate.exchange(
-                getUrl(),
-                HttpMethod.PUT,
-                request,
-                Void.class
-        );
+        ResponseEntity<Void> response = restTemplate.exchange(getUrl(), HttpMethod.PUT, request, Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    void noDeberiaCrearPrestamoConFechasInvalidas() {
-        PrestamoDto dto = new PrestamoDto();
+    void shouldNotCreateLoanWithInvalidDates() {
+        LoanDto dto = new LoanDto();
 
-        dto.setFechaPrestamo(LocalDate.now());
-        dto.setFechaDevolucion(LocalDate.now().minusDays(1)); // inválido
+        dto.setLoanStartDate(LocalDate.now());
+        dto.setLoanEndDate(LocalDate.now().minusDays(1)); // inválido
 
         dto.setGame(new com.ccsw.tutorial.game.model.GameDto());
         dto.getGame().setId(1L);
@@ -67,40 +62,25 @@ class PrestamoIT {
         dto.setClient(new com.ccsw.tutorial.client.model.ClientDto());
         dto.getClient().setId(1L);
 
-        HttpEntity<PrestamoDto> request = new HttpEntity<>(dto);
+        HttpEntity<LoanDto> request = new HttpEntity<>(dto);
 
-        ResponseEntity<String> response = restTemplate.exchange(
-                getUrl(),
-                HttpMethod.PUT,
-                request,
-                String.class
-        );
+        ResponseEntity<String> response = restTemplate.exchange(getUrl(), HttpMethod.PUT, request, String.class);
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
-    void deberiaObtenerListadoPrestamos() {
-        ResponseEntity<String> response = restTemplate.exchange(
-                getUrl(),
-                HttpMethod.GET,
-                null,
-                String.class
-        );
+    void shouldGetLoanList() {
+        ResponseEntity<String> response = restTemplate.exchange(getUrl(), HttpMethod.GET, null, String.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
-    void deberiaBorrarPrestamo() {
+    void shouldDeleteLoan() {
         Long id = 1L; // debe existir
 
-        ResponseEntity<Void> response = restTemplate.exchange(
-                getUrl() + "/" + id,
-                HttpMethod.DELETE,
-                null,
-                Void.class
-        );
+        ResponseEntity<Void> response = restTemplate.exchange(getUrl() + "/" + id, HttpMethod.DELETE, null, Void.class);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
     }

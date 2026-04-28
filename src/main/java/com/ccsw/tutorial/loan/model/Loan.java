@@ -1,7 +1,7 @@
-package com.ccsw.tutorial.prestamo.model;
+package com.ccsw.tutorial.loan.model;
 
 import com.ccsw.tutorial.client.model.Client;
-import com .ccsw.tutorial.game.model.Game;
+import com.ccsw.tutorial.game.model.Game;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -11,19 +11,19 @@ import java.time.LocalDate;
  *
  */
 @Entity
-@Table(name = "prestamo")
-public class Prestamo {
+@Table(name = "loan")
+public class Loan {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "fechaPrestamo", nullable = false)
-    private LocalDate fechaPrestamo;
+    @Column(name = "loanStartDate", nullable = false)
+    private LocalDate loanStartDate;
 
-    @Column(name = "fechaDevolucion", nullable = false)
-    private LocalDate fechaDevolucion;
+    @Column(name = "loanEndDate", nullable = false)
+    private LocalDate loanEndDate;
 
     @ManyToOne
     @JoinColumn(name = "game_id", nullable = false)
@@ -50,31 +50,31 @@ public class Prestamo {
     }
 
     /**
-     * @return fechaPrestamo
+     * @return loanStartDate
      */
-    public LocalDate getFechaPrestamo() {
-        return this.fechaPrestamo;
+    public LocalDate getLoanStartDate() {
+        return this.loanStartDate;
     }
 
     /**
-     * @param fechaPrestamo new value of {@link #getFechaPrestamo}.
+     * @param loanStartDate new value of {@link #getLoanStartDate}.
      */
-    public void setFechaPrestamo(LocalDate fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
+    public void setLoanStartDate(LocalDate loanStartDate) {
+        this.loanStartDate = loanStartDate;
     }
 
     /**
-     * @return fechaDevolucion
+     * @return loanEndDate
      */
-    public LocalDate getFechaDevolucion() {
-        return this.fechaDevolucion;
+    public LocalDate getLoanEndDate() {
+        return this.loanEndDate;
     }
 
     /**
-     * @param fechaDevolucion new value of {@link #getFechaDevolucion}.
+     * @param loanEndDate new value of {@link #getLoanEndDate}.
      */
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
+    public void setLoanEndDate(LocalDate loanEndDate) {
+        this.loanEndDate = loanEndDate;
     }
 
     /**

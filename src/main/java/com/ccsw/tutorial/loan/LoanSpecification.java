@@ -1,28 +1,28 @@
-package com.ccsw.tutorial.prestamo;
+package com.ccsw.tutorial.loan;
 
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
-import com.ccsw.tutorial.prestamo.model.Prestamo;
+import com.ccsw.tutorial.loan.model.Loan;
 import jakarta.persistence.criteria.*;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 
-public class PrestamoSpecification implements Specification<Prestamo> {
+public class LoanSpecification implements Specification<Loan> {
 
     private static final long serialVersionUID = 1L;
 
     private final SearchCriteria criteria;
 
-    public PrestamoSpecification(SearchCriteria criteria) {
+    public LoanSpecification(SearchCriteria criteria) {
         this.criteria = criteria;
     }
 
-    public static Specification<Prestamo> dateBetween(LocalDate date) {
-        return (Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> builder.and(builder.lessThanOrEqualTo(root.get("fechaPrestamo"), date), builder.greaterThanOrEqualTo(root.get("fechaDevolucion"), date));
+    public static Specification<Loan> dateBetween(LocalDate date) {
+        return (Root<Loan> root, CriteriaQuery<?> query, CriteriaBuilder builder) -> builder.and(builder.lessThanOrEqualTo(root.get("loanStartDate"), date), builder.greaterThanOrEqualTo(root.get("loanEndDate"), date));
     }
 
     @Override
-    public Predicate toPredicate(Root<Prestamo> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
+    public Predicate toPredicate(Root<Loan> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
 
         if (criteria.getOperation().equalsIgnoreCase(":") && criteria.getValue() != null) {
 
@@ -38,7 +38,7 @@ public class PrestamoSpecification implements Specification<Prestamo> {
         return null;
     }
 
-    private Path<?> getPath(Root<Prestamo> root) {
+    private Path<?> getPath(Root<Loan> root) {
         String key = criteria.getKey();
         String[] split = key.split("[.]", 0);
 
@@ -50,22 +50,24 @@ public class PrestamoSpecification implements Specification<Prestamo> {
         return expression;
     }
 
-    public static Specification<Prestamo> mismoJuego(Long juegoId) {
-        return (root, query, cb) -> cb.equal(root.get("game").get("id"), juegoId);
+    public static Specification<Loan> existsGameWithId(Long gameId) {
+        return (root, query, cb) -> cb.equal(root.get("game").get("id"), gameId);
     }
 
-    public static Specification<Prestamo> excluirId(Long id) {
+    public static Specification<Loan> excludeLoanId(Long id) {
+
         return (root, query, cb) -> id == null ? null : cb.notEqual(root.get("id"), id);
     }
 
-    public static Specification<Prestamo> seSolapa(LocalDate inicio, LocalDate fin) {
+    public static Specification<Loan> hasOverlapBetweenDates(LocalDate loanStartDate, LocalDate loanEndDate) {
         return (root, query, cb) -> {
 
-            return cb.and(cb.lessThanOrEqualTo(root.get("fechaPrestamo"), fin), cb.greaterThanOrEqualTo(root.get("fechaDevolucion"), inicio));
+            return cb.and(cb.lessThanOrEqualTo(root.get("loanStartDate"), loanEndDate), cb.greaterThanOrEqualTo(root.get("loanEndDate"), loanStartDate));
         };
     }
 
-    public static Specification<Prestamo> mismoCliente(Long clientId) {
+    public static Specification<Loan> existsClientWithId(Long clientId) {
+
         return (root, query, cb) -> cb.equal(root.get("client").get("id"), clientId);
     }
 

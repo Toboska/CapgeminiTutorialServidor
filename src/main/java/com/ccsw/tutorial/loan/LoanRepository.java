@@ -1,6 +1,6 @@
-package com.ccsw.tutorial.prestamo;
+package com.ccsw.tutorial.loan;
 
-import com.ccsw.tutorial.prestamo.model.Prestamo;
+import com.ccsw.tutorial.loan.model.Loan;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -8,21 +8,21 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
-public interface PrestamoRepository extends CrudRepository<Prestamo, Long>, JpaSpecificationExecutor<Prestamo> {
+public interface LoanRepository extends CrudRepository<Loan, Long>, JpaSpecificationExecutor<Loan> {
     /**
-     * Método para recuperar un listado paginado de {@link Prestamo}
+     * Método para recuperar un listado paginado de {@link Loan}
      *
      * @param pageable pageable
-     * @return {@link Page} de {@link Prestamo}
+     * @return {@link Page} de {@link Loan}
      */
-    Page<Prestamo> findAll(Pageable pageable);
+    Page<Loan> findAll(Pageable pageable);
 
     /**
      * Recupera una página de préstamos que cumplen con la especificación proporcionada.
-     * * @param spec     Especificación con los filtros aplicados.
+     * @param spec     Especificación con los filtros aplicados.
      * @param pageable Configuración de paginación.
      * @return Una página de resultados.
      */
     @EntityGraph(attributePaths = { "game", "client" })
-    Page<Prestamo> findAll(Specification<Prestamo> spec, Pageable pageable);
+    Page<Loan> findAll(Specification<Loan> spec, Pageable pageable);
 }

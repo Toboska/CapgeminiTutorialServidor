@@ -1,8 +1,8 @@
-package com.ccsw.tutorial.prestamo.model;
+package com.ccsw.tutorial.loan.model;
 
 import com.ccsw.tutorial.common.pagination.PageableRequest;
 
-public class PrestamoSearchDto {
+public class LoanSearchDto {
 
     private PageableRequest pageable;
 

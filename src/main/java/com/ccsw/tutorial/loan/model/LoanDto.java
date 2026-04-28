@@ -1,8 +1,7 @@
-package com.ccsw.tutorial.prestamo.model;
+package com.ccsw.tutorial.loan.model;
 
 import com.ccsw.tutorial.client.model.ClientDto;
-import com.ccsw.tutorial.game.model.Game;
-import com .ccsw.tutorial.game.model.GameDto;
+import com.ccsw.tutorial.game.model.GameDto;
 
 import java.time.LocalDate;
 
@@ -10,13 +9,13 @@ import java.time.LocalDate;
  * @author ccsw
  *
  */
-public class PrestamoDto {
+public class LoanDto {
 
     private Long id;
 
-    private LocalDate fechaPrestamo;
+    private LocalDate loanStartDate;
 
-    private LocalDate fechaDevolucion;
+    private LocalDate loanEndDate;
 
     private GameDto game;
 
@@ -39,31 +38,31 @@ public class PrestamoDto {
     }
 
     /**
-     * @return fechaPrestamo
+     * @return loanStartDate
      */
-    public LocalDate getFechaPrestamo() {
-        return this.fechaPrestamo;
+    public LocalDate getLoanStartDate() {
+        return this.loanStartDate;
     }
 
     /**
-     * @param fechaPrestamo new value of {@link #getFechaPrestamo}.
+     * @param loanStartDate new value of {@link #getLoanStartDate}.
      */
-    public void setFechaPrestamo(LocalDate fechaPrestamo) {
-        this.fechaPrestamo = fechaPrestamo;
+    public void setLoanStartDate(LocalDate loanStartDate) {
+        this.loanStartDate = loanStartDate;
     }
 
     /**
-     * @return fechaDevolucion
+     * @return loanEndDate
      */
-    public LocalDate getFechaDevolucion() {
-        return this.fechaDevolucion;
+    public LocalDate getLoanEndDate() {
+        return this.loanEndDate;
     }
 
     /**
-     * @param fechaDevolucion new value of {@link #getFechaDevolucion}.
+     * @param loanEndDate new value of {@link #getLoanEndDate}.
      */
-    public void setFechaDevolucion(LocalDate fechaDevolucion) {
-        this.fechaDevolucion = fechaDevolucion;
+    public void setLoanEndDate(LocalDate loanEndDate) {
+        this.loanEndDate = loanEndDate;
     }
 
     /**
