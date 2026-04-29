@@ -39,5 +39,10 @@ public interface ClientService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
-    
+
+    void validateNameNotNull(String clientName);
+
+    void validateNameNotExists(String clientName);
+
+    void validateClientNameNotExistsWhenId(Long id, ClientDto dto);
 }

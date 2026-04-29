@@ -2,6 +2,8 @@ package com.ccsw.tutorial.client;
 
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
+import com.ccsw.tutorial.exception.BusinessBadRequestException;
+import com.ccsw.tutorial.exception.BusinessConflictException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,26 +42,55 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public void save(Long id, ClientDto dto) {
-        if (!this.clientRepository.existsByName(dto.getName())) {
-            Client client;
+        //TODO Hay que tener en cuenta las posibles excepciones
+        Client client;
 
-            if (id == null) {
-                client = new Client();
-            } else {
-                client = this.get(id);
-            }
+        validateNameNotNull(dto.getName());
 
-            client.setName(dto.getName());
-
-            this.clientRepository.save(client);
+        if (id == null) {
+            //TODO se le pueden pasar dos parámetros
+            validateNameNotExists(dto.getName());
+            client = new Client();
         } else {
-            throw new RuntimeException("Ese nombre de Clientre ya existe");
+            validateClientNameNotExistsWhenId(id, dto);
+            client = this.get(id);
+        }
+
+        client.setName(dto.getName());
+
+        this.clientRepository.save(client);
+
+    }
+
+    @Override
+    public void validateClientNameNotExistsWhenId(Long id, ClientDto dto) {
+
+        clientRepository.findByName(dto.getName()).filter(existing -> !existing.getId().equals(id)).ifPresent(existing -> {
+            throw new BusinessConflictException("THIS_NAME_ALREADY_EXISTS", "Este nombre de usuario ya está dado de alta en la aplicación.", "name");
+        });
+
+    }
+
+    @Override
+    public void validateNameNotNull(String clientName) {
+        if (clientName == null && clientName.trim().isEmpty()) {
+            throw new BusinessBadRequestException("THIS_NAME_IS_NULL", "El nombre de usuario no puede estar vacío", "name");
+        }
+    }
+
+    @Override
+    public void validateNameNotExists(String clientName) {
+        if (this.clientRepository.existsByName(clientName)) {
+            //BAD REQUEST, la petición ha llegado correctamente, sin embargo no cumple la lógica de negocio
+            //Este error es un 409
+            throw new BusinessConflictException("THIS_NAME_ALREADY_EXISTS", "Este nombre de usuario ya está dado de alta en la aplicación.", "name");
         }
     }
 
     /**
      * {@inheritDoc}
      */
+    //TODO
     @Override
     public void delete(Long id) throws Exception {
 
