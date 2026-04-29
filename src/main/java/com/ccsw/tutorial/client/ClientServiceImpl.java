@@ -42,13 +42,12 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public void save(Long id, ClientDto dto) {
-        //TODO Hay que tener en cuenta las posibles excepciones
+
         Client client;
 
         validateNameNotNull(dto.getName());
 
         if (id == null) {
-            //TODO se le pueden pasar dos parámetros
             validateNameNotExists(dto.getName());
             client = new Client();
         } else {
@@ -62,15 +61,19 @@ public class ClientServiceImpl implements ClientService {
 
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validateClientNameNotExistsWhenId(Long id, ClientDto dto) {
-
         clientRepository.findByName(dto.getName()).filter(existing -> !existing.getId().equals(id)).ifPresent(existing -> {
             throw new BusinessConflictException("THIS_NAME_ALREADY_EXISTS", "Este nombre de usuario ya está dado de alta en la aplicación.", "name");
         });
-
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validateNameNotNull(String clientName) {
         if (clientName == null && clientName.trim().isEmpty()) {
@@ -78,6 +81,9 @@ public class ClientServiceImpl implements ClientService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validateNameNotExists(String clientName) {
         if (this.clientRepository.existsByName(clientName)) {
