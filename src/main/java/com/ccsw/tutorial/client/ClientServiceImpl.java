@@ -59,7 +59,6 @@ public class ClientServiceImpl implements ClientService {
         client.setName(dto.getName());
 
         this.clientRepository.save(client);
-
     }
 
     /**
@@ -97,7 +96,6 @@ public class ClientServiceImpl implements ClientService {
     /**
      * {@inheritDoc}
      */
-    //TODO
     @Override
     public void delete(Long id) throws Exception {
 

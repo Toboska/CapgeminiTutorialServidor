@@ -17,6 +17,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("errorCode", ex.getErrorCode(), "message", ex.getMessage(), "field", ex.getField()));
     }
 
+    //404
     @ExceptionHandler(BusinessConflictException.class)
     public ResponseEntity<Map<String, Object>> BusinessNotFoundException(BusinessConflictException ex) {
 
