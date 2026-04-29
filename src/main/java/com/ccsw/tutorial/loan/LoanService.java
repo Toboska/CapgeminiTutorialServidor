@@ -57,37 +57,34 @@ public interface LoanService {
      * @param loanEndDate de la entidad
      * @return {boolean} true si la fecha de devolución es válida (posterior a la de inicio), false en caso contrario.
      */
-    boolean checkValidDateRange(LocalDate loanStartDate, LocalDate loanEndDate);
+    void checkValidDateRange(LocalDate loanStartDate, LocalDate loanEndDate);
 
     /**
      *
      * Método para controlar si un juego hay un juego prestado entre dos fechas {@link Loan}
      *
-     * @param gameId del juego
+     * @param gameId        del juego
      * @param loanStartDate de la entidad
-     * @param loanEndDate de la entidad
-     * @return {boolean true si está prestado, false en caso contrario.
+     * @param loanEndDate   de la entidad
      */
-    boolean isGameAvailable(Long gameId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId);
+    void isGameAvailable(Long gameId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId);
 
     /**
      *
      * Método para comporbar si un usuario tiene un préstamo en curso entre dos fechas {@link Loan}
      *
-     * @param clientId del cliente
+     * @param clientId      del cliente
      * @param loanStartDate de la entidad
-     * @param loanEndDate de la entidad
-     * @return {boolean si el cliente tiene préstamo entre las fechas, false en caso contrario.
+     * @param loanEndDate   de la entidad
      */
-    boolean isClientInCurrentLoan(Long clientId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId);
+    void isClientInCurrentLoan(Long clientId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId);
 
     /**
      * Método para controlar que las fechas no son nulas y comprobar todos los requisitos {@link Loan}
      *
      * @param dto entidad
-     * @return {boolean} true si se cumplen todos los requisitos, false en caso contrario.
      */
-    boolean checkAllLoanRequirements(LoanDto dto);
+    void checkAllLoanRequirements(LoanDto dto);
 
     /**
      * Método para borrar una {@link Loan}

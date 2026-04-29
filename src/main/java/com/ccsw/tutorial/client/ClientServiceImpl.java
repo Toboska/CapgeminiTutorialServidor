@@ -5,6 +5,7 @@ import com.ccsw.tutorial.client.model.ClientDto;
 import com.ccsw.tutorial.exception.BusinessBadRequestException;
 import com.ccsw.tutorial.exception.BusinessConflictException;
 import com.ccsw.tutorial.exception.BusinessNotFoundException;
+import com.ccsw.tutorial.loan.LoanRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,9 @@ public class ClientServiceImpl implements ClientService {
 
     @Autowired
     ClientRepository clientRepository;
+
+    @Autowired
+    LoanRepository loanRepository;
 
     /**
      * {@inheritDoc}
@@ -98,11 +102,14 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     @Override
-    //TODO hacer que tenga en cuenta el caso de que sea la fk en otro tabla
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {
             throw new BusinessNotFoundException("THIS_CLIENT_NOT_EXISTS", "No hay un cliente ese id", "id");
+        }
+
+        if(loanRepository.existsByClientId(id)){
+            throw new BusinessConflictException("CLIENT_HAS_INVOICES", "No se puede eliminar el cliente porque tiene préstamos asociados.", "id");
         }
 
         this.clientRepository.deleteById(id);

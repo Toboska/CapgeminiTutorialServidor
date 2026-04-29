@@ -2,6 +2,9 @@ package com.ccsw.tutorial.loan;
 
 import com.ccsw.tutorial.client.ClientService;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
+import com.ccsw.tutorial.exception.BusinessBadRequestException;
+import com.ccsw.tutorial.exception.BusinessConflictException;
+import com.ccsw.tutorial.exception.BusinessNotFoundException;
 import com.ccsw.tutorial.game.GameService;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
@@ -74,68 +77,80 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void save(Long id, LoanDto dto) {
 
-        if (checkAllLoanRequirements(dto)) {
-            Loan loan;
+        checkAllLoanRequirements(dto);
 
-            if (id == null) {
-                loan = new Loan();
-            } else {
-                loan = this.get(id);
-            }
+        Loan loan;
 
-            BeanUtils.copyProperties(dto, loan, "id", "client", "game");
-
-            loan.setClient(clientService.get(dto.getClient().getId()));
-            loan.setGame(gameService.get(dto.getGame().getId()));
-
-            this.loanRepository.save(loan);
+        if (id == null) {
+            loan = new Loan();
         } else {
-            throw new RuntimeException("No se cumplen las condiciones");
+            loan = this.get(id);
         }
+
+        BeanUtils.copyProperties(dto, loan, "id", "client", "game");
+
+        loan.setClient(clientService.get(dto.getClient().getId()));
+        loan.setGame(gameService.get(dto.getGame().getId()));
+
+        this.loanRepository.save(loan);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean checkValidDateRange(LocalDate loanStartDate, LocalDate loanEndDate) {
+    public void checkValidDateRange(LocalDate loanStartDate, LocalDate loanEndDate) {
 
-        return (ChronoUnit.DAYS.between(loanStartDate, loanEndDate) <= 14 && (ChronoUnit.DAYS.between(loanStartDate, loanEndDate)) >= 0);
+         if(!(ChronoUnit.DAYS.between(loanStartDate, loanEndDate) <= 14 && (ChronoUnit.DAYS.between(loanStartDate, loanEndDate)) >= 0)){
+             throw new BusinessConflictException("MAX_DURATION_EXCEEDED","El periodo solicitado no puede superar los 14 días.", "loanEndDate");
+         }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isGameAvailable(Long gameId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId) {
+    public void isGameAvailable(Long gameId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId) {
 
         Specification<Loan> spec = Specification.allOf(LoanSpecification.existsGameWithId(gameId), LoanSpecification.hasOverlapBetweenDates(loanStartDate, loanEndDate), LoanSpecification.excludeLoanId(loanId));
 
-        return !loanRepository.exists(spec);
+        if(loanRepository.exists(spec)){
+            throw new BusinessConflictException("GAME_ALREADY_RESERVED", "El juego ya está reservado por otro usuario en las fechas seleccionadas.", "gameId");
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isClientInCurrentLoan(Long clientId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId) {
+    public void isClientInCurrentLoan(Long clientId, LocalDate loanStartDate, LocalDate loanEndDate, Long loanId) {
 
         Specification<Loan> spec = Specification.allOf(LoanSpecification.existsClientWithId(clientId), LoanSpecification.hasOverlapBetweenDates(loanStartDate, loanEndDate), LoanSpecification.excludeLoanId(loanId));
 
-        return !loanRepository.exists(spec);
+        if(loanRepository.exists(spec)){
+            throw new BusinessConflictException("CLIENT_ALREADY_IN_CURRENT_LOAN", "El cliente ya tiene una reserva activa para el periodo seleccionado", "clientId");
+        }
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean checkAllLoanRequirements(LoanDto dto) {
-        if (dto.getLoanStartDate() == null || dto.getLoanEndDate() == null) {
-            return false;
+    public void checkAllLoanRequirements(LoanDto dto) {
+
+        if (dto.getLoanStartDate() == null) {
+            throw new BusinessBadRequestException("FIELD_CANNOT_BE_EMPTY", "La fecha de inicio no puede estar vacía", "loanStartDate");
         }
 
-        return checkValidDateRange(dto.getLoanStartDate(), dto.getLoanEndDate()) && isGameAvailable(dto.getGame().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId()) && isClientInCurrentLoan(dto.getClient().getId(),
-                dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
+        if (dto.getLoanEndDate() == null){
+            throw new BusinessBadRequestException("FIELD_CANNOT_BE_EMPTY", "La fecha de fin no puede estar vacía", "loanEndDate");
+        }
+
+        checkValidDateRange(dto.getLoanStartDate(), dto.getLoanEndDate());
+
+        isGameAvailable(dto.getGame().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
+
+        isClientInCurrentLoan(dto.getClient().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
     }
 
     /**
@@ -145,7 +160,7 @@ public class LoanServiceImpl implements LoanService {
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {
-            throw new Exception("Not exists");
+            throw new BusinessNotFoundException("THIS_LOAN_NOT_EXISTS", "No hay un préstamo con ese id", "id");
         }
 
         this.loanRepository.deleteById(id);

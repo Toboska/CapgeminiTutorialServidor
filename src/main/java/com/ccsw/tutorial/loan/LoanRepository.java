@@ -25,4 +25,6 @@ public interface LoanRepository extends CrudRepository<Loan, Long>, JpaSpecifica
      */
     @EntityGraph(attributePaths = { "game", "client" })
     Page<Loan> findAll(Specification<Loan> spec, Pageable pageable);
+
+    boolean existsByClientId(Long id);
 }
