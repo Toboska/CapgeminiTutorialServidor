@@ -1,5 +1,6 @@
 package com.ccsw.tutorial.loan;
 
+import ch.qos.logback.core.util.StringUtil;
 import com.ccsw.tutorial.client.ClientService;
 import com.ccsw.tutorial.common.criteria.SearchCriteria;
 import com.ccsw.tutorial.exception.BusinessBadRequestException;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -138,6 +140,18 @@ public class LoanServiceImpl implements LoanService {
     @Override
     public void checkAllLoanRequirements(LoanDto dto) {
 
+        validateLoanDtoFieldsNotNull(dto);
+
+        checkValidDateRange(dto.getLoanStartDate(), dto.getLoanEndDate());
+
+        isGameAvailable(dto.getGame().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
+
+        isClientInCurrentLoan(dto.getClient().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
+    }
+
+    @Override
+    public void validateLoanDtoFieldsNotNull(LoanDto dto){
+        
         if (dto.getLoanStartDate() == null) {
             throw new BusinessBadRequestException("FIELD_CANNOT_BE_EMPTY", "La fecha de inicio no puede estar vacía", "loanStartDate");
         }
@@ -146,11 +160,13 @@ public class LoanServiceImpl implements LoanService {
             throw new BusinessBadRequestException("FIELD_CANNOT_BE_EMPTY", "La fecha de fin no puede estar vacía", "loanEndDate");
         }
 
-        checkValidDateRange(dto.getLoanStartDate(), dto.getLoanEndDate());
+        if (!StringUtils.hasText(dto.getClient().getName())){
+            throw new BusinessBadRequestException("THIS_NAME_IS_NULL", "El nombre de usuario no puede estar vacío", "name");
+        }
 
-        isGameAvailable(dto.getGame().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
-
-        isClientInCurrentLoan(dto.getClient().getId(), dto.getLoanStartDate(), dto.getLoanEndDate(), dto.getId());
+        if (!StringUtils.hasText(dto.getGame().getTitle())){
+            throw new BusinessBadRequestException("THIS_GAME_TITLE_IS_NULL", "El nombre del juego no puede ser nulo", "title");
+        }
     }
 
     /**

@@ -1,5 +1,7 @@
 package com.ccsw.tutorial.loan;
 
+import com.ccsw.tutorial.client.model.Client;
+import com.ccsw.tutorial.exception.BusinessBadRequestException;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
 import org.springframework.data.domain.Page;
@@ -83,6 +85,7 @@ public interface LoanService {
      * Método para controlar que las fechas no son nulas y comprobar todos los requisitos {@link Loan}
      *
      * @param dto entidad
+     * @return {boolean} true si se cumplen todos los requisitos, false en caso contrario.
      */
     void checkAllLoanRequirements(LoanDto dto);
 
@@ -92,5 +95,14 @@ public interface LoanService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
+
+
+    /**
+     * Valida que no exista otro cliente con el mismo nombre al actualizar uno existente. {@link Client}
+     *
+     * @param dto datos del préstamo
+     * @throws BusinessBadRequestException si uno de los campos está vacío
+     */
+    void validateLoanDtoFieldsNotNull(LoanDto dto);
 
 }

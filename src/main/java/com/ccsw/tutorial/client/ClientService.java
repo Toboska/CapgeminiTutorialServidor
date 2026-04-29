@@ -3,6 +3,7 @@ package com.ccsw.tutorial.client;
 import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
 import com.ccsw.tutorial.exception.BusinessBadRequestException;
+import com.ccsw.tutorial.exception.BusinessConflictException;
 
 import java.util.List;
 
@@ -53,7 +54,7 @@ public interface ClientService {
      * Valida que no exista ya un cliente con el mismo nombre. {@link Client}
      *
      * @param clientName nombre del cliente
-     * @throws BusinessBadRequestException si ya existe un cliente con ese nombre
+     * @throws BusinessConflictException si ya existe un cliente con ese nombre
      */
     void validateNameNotExists(String clientName);
 
@@ -62,7 +63,7 @@ public interface ClientService {
      *
      * @param id identificador del cliente
      * @param dto datos del cliente
-     * @throws BusinessBadRequestException si existe otro cliente con el mismo nombre
+     * @throws BusinessConflictException si existe otro cliente con el mismo nombre
      */
     void validateClientNameNotExistsWhenId(Long id, ClientDto dto);
 }
