@@ -4,6 +4,7 @@ import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.client.model.ClientDto;
 import com.ccsw.tutorial.exception.BusinessBadRequestException;
 import com.ccsw.tutorial.exception.BusinessConflictException;
+import com.ccsw.tutorial.exception.BusinessNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -101,7 +102,7 @@ public class ClientServiceImpl implements ClientService {
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {
-            throw new Exception("Not exists");
+            throw new BusinessNotFoundException("THIS_CLIENT_NOT_EXISTS", "No hay un cliente ese id", "id");
         }
 
         this.clientRepository.deleteById(id);

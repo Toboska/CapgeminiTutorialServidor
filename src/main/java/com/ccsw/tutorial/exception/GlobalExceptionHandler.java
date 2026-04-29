@@ -17,6 +17,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("errorCode", ex.getErrorCode(), "message", ex.getMessage(), "field", ex.getField()));
     }
 
+    @ExceptionHandler(BusinessConflictException.class)
+    public ResponseEntity<Map<String, Object>> BusinessNotFoundException(BusinessConflictException ex) {
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("errorCode", ex.getErrorCode(), "message", ex.getMessage(), "field", ex.getField()));
+    }
+
     //409
     @ExceptionHandler(BusinessConflictException.class)
     public ResponseEntity<Map<String, Object>> handleBusinessConflict(BusinessConflictException ex) {
