@@ -8,6 +8,7 @@ import com.ccsw.tutorial.exception.BusinessNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -76,7 +77,7 @@ public class ClientServiceImpl implements ClientService {
      */
     @Override
     public void validateNameNotNull(String clientName) {
-        if (clientName == null && clientName.trim().isEmpty()) {
+        if (!StringUtils.hasText(clientName)) {
             throw new BusinessBadRequestException("THIS_NAME_IS_NULL", "El nombre de usuario no puede estar vacío", "name");
         }
     }
@@ -97,6 +98,7 @@ public class ClientServiceImpl implements ClientService {
      * {@inheritDoc}
      */
     @Override
+    //TODO hacer que tenga en cuenta el caso de que sea la fk en otro tabla
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {

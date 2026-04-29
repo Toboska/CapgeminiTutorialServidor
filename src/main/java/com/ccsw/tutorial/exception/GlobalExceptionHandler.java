@@ -18,8 +18,8 @@ public class GlobalExceptionHandler {
     }
 
     //404
-    @ExceptionHandler(BusinessConflictException.class)
-    public ResponseEntity<Map<String, Object>> BusinessNotFoundException(BusinessConflictException ex) {
+    @ExceptionHandler(BusinessNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> BusinessNotFoundException(BusinessNotFoundException ex) {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("errorCode", ex.getErrorCode(), "message", ex.getMessage(), "field", ex.getField()));
     }
