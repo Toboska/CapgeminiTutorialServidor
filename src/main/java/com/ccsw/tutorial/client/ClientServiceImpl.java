@@ -105,10 +105,10 @@ public class ClientServiceImpl implements ClientService {
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {
-            throw new BusinessNotFoundException("THIS_CLIENT_NOT_EXISTS", "No hay un cliente ese id", "id");
+            throw new BusinessNotFoundException("THIS_ID_IS_NULL", "No hay un cliente ese id", "id");
         }
 
-        if(loanRepository.existsByClientId(id)){
+        if (loanRepository.existsByClientId(id)) {
             throw new BusinessConflictException("CLIENT_HAS_INVOICES", "No se puede eliminar el cliente porque tiene préstamos asociados.", "id");
         }
 

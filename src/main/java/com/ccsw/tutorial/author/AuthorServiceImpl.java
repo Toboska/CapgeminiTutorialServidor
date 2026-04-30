@@ -3,6 +3,7 @@ package com.ccsw.tutorial.author;
 import com.ccsw.tutorial.author.model.Author;
 import com.ccsw.tutorial.author.model.AuthorDto;
 import com.ccsw.tutorial.author.model.AuthorSearchDto;
+import com.ccsw.tutorial.exception.BusinessNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +67,7 @@ public class AuthorServiceImpl implements AuthorService {
     public void delete(Long id) throws Exception {
 
         if (this.get(id) == null) {
-            throw new Exception("Not exists");
+            throw new BusinessNotFoundException("THIS_ID_IS_NULL", "No hay un autor ese id", "id");
         }
 
         this.authorRepository.deleteById(id);
