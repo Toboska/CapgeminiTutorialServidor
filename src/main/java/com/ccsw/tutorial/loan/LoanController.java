@@ -3,16 +3,13 @@ package com.ccsw.tutorial.loan;
 import com.ccsw.tutorial.category.model.Category;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
+import com.ccsw.tutorial.loan.model.LoanSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 /**
  * @loan ccsw
@@ -33,17 +30,14 @@ public class LoanController {
     /**
      * Método para recuperar un listado paginado de {@link Loan}
      *
-     * @param pageable Configuración de paginación
-     * @param gameId   PK del juego
-     * @param clientId PK del cliente
-     * @param date     Fecha a filtrar
+     * @param dto de búsqueda
+     * @return {@link Page} de {@link LoanDto}
      */
     @Operation(summary = "Find Page", description = "Method that return a page of Loans")
-    @GetMapping
-    public Page<LoanDto> findPage(Pageable pageable, @RequestParam(required = false) Long gameId, @RequestParam(required = false) Long clientId,
-            @RequestParam(required = false, value = "date") @DateTimeFormat(pattern = "MM/dd/yyyy") LocalDate date) {
-        System.out.println(date);
-        Page<Loan> page = loanService.findPage(pageable, gameId, clientId, date);
+    @RequestMapping(path = "", method = RequestMethod.POST)
+    public Page<LoanDto> findPage(@RequestBody LoanSearchDto dto) {
+
+        Page<Loan> page = loanService.findPage(dto);
 
         return page.map(e -> mapper.map(e, LoanDto.class));
     }

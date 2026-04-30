@@ -4,8 +4,8 @@ import com.ccsw.tutorial.client.model.Client;
 import com.ccsw.tutorial.exception.BusinessBadRequestException;
 import com.ccsw.tutorial.loan.model.Loan;
 import com.ccsw.tutorial.loan.model.LoanDto;
+import com.ccsw.tutorial.loan.model.LoanSearchDto;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,13 +19,10 @@ public interface LoanService {
     /**
      * Recupera una página de préstamos filtrando opcionalmente por juego, cliente y/o fecha
      *
-     * @param pageable Configuración de paginación
-     * @param gameId   PK del juego
-     * @param clientId PK del cliente
-     * @param date     Fecha a filtrar
+     * @param dto de búsqueda
      * @return {@link Page} de {@link Loan}
      */
-    Page<Loan> findPage(Pageable pageable, Long gameId, Long clientId, LocalDate date);
+    Page<Loan> findPage(LoanSearchDto dto);
 
     /**
      * Recupera un listado de autores {@link Loan}
@@ -95,7 +92,6 @@ public interface LoanService {
      * @param id PK de la entidad
      */
     void delete(Long id) throws Exception;
-
 
     /**
      * Valida que no exista otro cliente con el mismo nombre al actualizar uno existente. {@link Client}
