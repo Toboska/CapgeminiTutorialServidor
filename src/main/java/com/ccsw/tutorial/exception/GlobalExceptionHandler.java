@@ -30,4 +30,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("errorCode", ex.getErrorCode(), "message", ex.getMessage(), "field", ex.getField()));
     }
+
+    //internacionalizar el front y18n en función del locale
 }

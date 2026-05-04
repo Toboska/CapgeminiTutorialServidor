@@ -10,7 +10,7 @@ public class LoanSearchDto {
 
     private Long clientId;
 
-    private Long GameId;
+    private Long gameId;
 
     private LocalDate dateSelected;
 
@@ -23,11 +23,11 @@ public class LoanSearchDto {
     }
 
     public Long getGameId() {
-        return GameId;
+        return gameId;
     }
 
     public void setGameId(Long gameId) {
-        GameId = gameId;
+        gameId = gameId;
     }
 
     public LocalDate getDateSelected() {
